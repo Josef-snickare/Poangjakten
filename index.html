@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Familjens Poängjakt</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .player {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin: 15px auto;
+      padding: 20px;
+      max-width: 300px;
+    }
+    .points {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background: #3498db;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    #reset-button {
+      background: #e74c3c;
+      margin-top: 30px;
+    }
+    #reset-button:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <h1>Familjens Poängjakt</h1>
+  <p><strong>Först till 100 vinner 100 kr!</strong></p>
+
+  <div class="player" id="melissa">
+    <h2>Melissa</h2>
+    <div class="points" id="points-melissa">0 poäng</div>
+    <button onclick="addPoints('melissa')">Logga syssla</button>
+  </div>
+
+  <div class="player" id="ella">
+    <h2>Ella</h2>
+    <div class="points" id="points-ella">0 poäng</div>
+    <button onclick="addPoints('ella')">Logga syssla</button>
+  </div>
+
+  <div class="player" id="levi">
+    <h2>Levi</h2>
+    <div class="points" id="points-levi">0 poäng</div>
+    <button onclick="addPoints('levi')">Logga syssla</button>
+  </div>
+
+  <!-- Återställningsknapp för admin -->
+  <button id="reset-button" onclick="resetPoints()">Återställ poängen (endast admin)</button>
+
+  <script>
+    const defaultPoints = {
+      melissa: 0,
+      ella: 0,
+      levi: 0
+    };
+
+    // Ladda poäng från LocalStorage
+    let points = JSON.parse(localStorage.getItem('points')) || {...defaultPoints};
+
+    function updateDisplay() {
+      for (const name in points) {
+        document.getElementById(`points-${name}`).innerText = `${points[name]} poäng`;
+      }
+    }
+
+    function addPoints(name) {
+      points[name] += 10;
+      localStorage.setItem('points', JSON.stringify(points));
+      updateDisplay();
+
+      if (points[name] >= 100) {
+        alert(`${name.charAt(0).toUpperCase() + name.slice(1)} har vunnit 100 kr!`);
+      }
+    }
+
+    function resetPoints() {
+      if (confirm("Är du säker på att du vill återställa poängen?")) {
+        points = {...defaultPoints};
+        localStorage.setItem('points', JSON.stringify(points));
+        updateDisplay();
+      }
+    }
+
+    updateDisplay(); // Visa rätt poäng vid sidladdning
+  </script>
+</body>
+</html>
